@@ -5,11 +5,11 @@ import { usePathname } from "next/navigation";
 
 const NAV_LINKS = [
   {
-    title: "Home",
+    label: "Home",
     href: "/",
   },
   {
-    title: "API Docs",
+    label: "API Docs",
     href: "/docs",
   },
 ];
@@ -23,7 +23,7 @@ function Header() {
         <ul className="flex items-center gap-8">
           {NAV_LINKS.map((link) => {
             const isActive = pathname === link.href || (link.href !== "/" && pathname.startsWith(link.href));
-            return (<li key={link.title}><Link href={link.href} className={isActive ? "active" : ""}>{link.title}</Link></li>);
+            return (<li key={link.label}><Link href={link.href} className={isActive ? "active" : ""}>{link.label}</Link></li>);
           })}
         </ul>
       </nav>

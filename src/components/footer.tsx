@@ -3,7 +3,7 @@ import Link from "next/link";
 
 const ADMIN_LINKS = [
   {
-    title: "Admin",
+    label: "Admin",
     href: "/admin",
   },
 ];
@@ -21,7 +21,7 @@ function Footer() {
           <SignedIn>
             <ul>
               {ADMIN_LINKS.map((link) => {
-                return (<li key={link.title}><Link href={link.href}>{link.title}</Link></li>);
+                return (<li key={link.label}><Link href={link.href}>{link.label}</Link></li>);
               })}
             </ul>
             <SignOutButton />
