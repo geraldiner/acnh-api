@@ -6,6 +6,10 @@ const ADMIN_LINKS = [
     href: "",
   },
   {
+    label: "Blob Stores",
+    href: "/blob-stores",
+  },
+  {
     label: "Debug",
     href: "debug",
   },
@@ -25,7 +29,11 @@ function Admin() {
       <h1>Hello, Admin!</h1>
       <div className="flex flex-col gap-6">
         {ADMIN_LINKS.map((link) => {
-          return (<Link key={link.label} href={`/admin/${link.href}`}>{link.label}</Link>);
+          return (
+            <Link key={link.label} href={`/admin/${link.href}`}>
+              {link.label}
+            </Link>
+          );
         })}
       </div>
     </>
