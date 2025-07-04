@@ -2,12 +2,13 @@
 import axios from "axios";
 
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { convertFileToBlobUrl } from "@/app/utils/file_utils";
 
 function UploadImages() {
   const [uploadedFiles, setUploadedFiles] = useState<File[] | null>(null);
   const [serverMessage, setServerMessage] = useState<string>("");
+  const formRef = useRef<HTMLFormElement>(null);
 
   const uploadFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -33,7 +34,7 @@ function UploadImages() {
         "http://localhost:3000/api/upload-images",
         formData,
       );
-      e.target.reset();
+      formRef.current?.reset();
       setServerMessage(response.data.message);
       setUploadedFiles(null);
     }
@@ -44,7 +45,7 @@ function UploadImages() {
       <h1>Hello, UploadImages!</h1>
       <section>
         <form
-          id="upload-images"
+          ref={formRef}
           className="grid grid-cols-1 gap-6 border-1 border-purple-500 bg-purple-50 p-6 rounded-md"
           onSubmit={e => submitUpload(e)}
         >
@@ -68,29 +69,15 @@ function UploadImages() {
                     {uploadedFiles?.map((file) => {
                       return (
                         <li className="inline-block" key={file.name}>
-                          {file.type.startsWith("audio")
-                            ? (
-                                <>
-                                  <p>{file.name}</p>
-                                  <audio controls>
-                                    <source
-                                      src={convertFileToBlobUrl(file)}
-                                      type="audio/mpeg"
-                                    />
-                                  </audio>
-                                </>
-                              )
-                            : (
-                                <>
-                                  <Image
-                                    className="rounded-sm"
-                                    width={96}
-                                    height={96}
-                                    alt={`${file.name}`}
-                                    src={convertFileToBlobUrl(file)}
-                                  />
-                                </>
-                              )}
+                          <>
+                            <Image
+                              className="rounded-sm"
+                              width={96}
+                              height={96}
+                              alt={`${file.name}`}
+                              src={convertFileToBlobUrl(file)}
+                            />
+                          </>
                         </li>
                       );
                     })}

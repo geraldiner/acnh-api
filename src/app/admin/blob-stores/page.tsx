@@ -24,10 +24,14 @@ async function BlobStores() {
           <p>
             Stores:
             {" "}
-            {data.stores.join(",")}
+            {data.stores.join(", ")}
           </p>
         </section>
       )}
+
+      <section>
+        <h2>Blob Actions</h2>
+      </section>
     </>
 
   );

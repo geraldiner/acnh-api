@@ -1,6 +1,5 @@
 import type { Context } from "@netlify/functions";
 import { getStore } from "@netlify/blobs";
-import { v4 as uuid } from "uuid";
 
 export default async (req: Request, context: Context) => {
   // Accessing the request as `multipart/form-data`.

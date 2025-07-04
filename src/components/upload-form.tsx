@@ -39,7 +39,6 @@ function UploadForm() {
         <input
           onChange={e => uploadFiles(e)}
           className="block w-full md:w-1/2 text-sm border border-gray-300 bg-white rounded-sm cursor-pointer file:bg-purple-500 file:text-white file:px-4 file:py-2"
-          id="large_size"
           type="file"
           accept="image/*, audio/*"
           multiple

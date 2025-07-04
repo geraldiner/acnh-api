@@ -1,11 +1,13 @@
 "use client";
-import Image from "next/image";
-import { useState } from "react";
+import axios from "axios";
 
+import { useRef, useState } from "react";
 import { convertFileToBlobUrl } from "@/app/utils/file_utils";
 
 function UploadAudio() {
   const [uploadedFiles, setUploadedFiles] = useState<File[] | null>(null);
+  const [serverMessage, setServerMessage] = useState<string>("");
+  const formRef = useRef<HTMLFormElement>(null);
 
   const uploadFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
@@ -20,10 +22,20 @@ function UploadAudio() {
     }
   };
 
-  const submitUpload = (e: React.FormEvent<HTMLFormElement>) => {
+  const submitUpload = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (uploadedFiles && uploadedFiles.length) {
-      console.log("hello, world!");
+      const formData = new FormData();
+      for (const file of uploadedFiles) {
+        formData.append(file.name, file);
+      }
+      const response = await axios.post(
+        "http://localhost:3000/api/upload-audio",
+        formData,
+      );
+      formRef.current?.reset();
+      setServerMessage(response.data.message);
+      setUploadedFiles(null);
     }
   };
 
@@ -31,7 +43,7 @@ function UploadAudio() {
     <>
       <h1>Hello, UploadAudio!</h1>
       <section>
-        <form className="grid grid-cols-1 gap-6 border-1 border-purple-500 bg-purple-50 p-6 rounded-md" onSubmit={submitUpload}>
+        <form ref={formRef} className="grid grid-cols-1 gap-6 border-1 border-purple-500 bg-purple-50 p-6 rounded-md" onSubmit={submitUpload}>
           <div>
             <label className="block font-bold mb-2" htmlFor="multiple_files">
               Upload multiple audio files
@@ -39,7 +51,6 @@ function UploadAudio() {
             <input
               onChange={e => uploadFiles(e)}
               className="block w-full md:w-1/2 text-sm border border-gray-300 bg-white rounded-sm cursor-pointer file:bg-purple-500 file:text-white file:px-4 file:py-2"
-              id="large_size"
               type="file"
               accept="audio/*"
               multiple
@@ -53,26 +64,12 @@ function UploadAudio() {
                     {uploadedFiles?.map((file) => {
                       return (
                         <li className="inline-block" key={file.name}>
-                          {file.type.startsWith("audio")
-                            ? (
-                                <>
-                                  <p>{file.name}</p>
-                                  <audio controls>
-                                    <source src={convertFileToBlobUrl(file)} type="audio/mpeg" />
-                                  </audio>
-                                </>
-                              )
-                            : (
-                                <>
-                                  <Image
-                                    className="rounded-sm"
-                                    width={96}
-                                    height={96}
-                                    alt={`${file.name}`}
-                                    src={convertFileToBlobUrl(file)}
-                                  />
-                                </>
-                              )}
+                          <>
+                            <p>{file.name}</p>
+                            <audio controls>
+                              <source src={convertFileToBlobUrl(file)} type="audio/mpeg" />
+                            </audio>
+                          </>
                         </li>
                       );
                     })}
@@ -89,6 +86,7 @@ function UploadAudio() {
           >
             Upload!
           </button>
+          {serverMessage && <p>{serverMessage}</p>}
         </form>
       </section>
     </>
