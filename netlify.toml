@@ -4,7 +4,7 @@
   publish = ".next"
 
 [dev]
-  command = "npm run dev" # Command to start your dev server
+  command = "next dev" # Command to start your dev server
   publish = ".next" # Folder with the static content for _redirect file
 
 [[redirects]]

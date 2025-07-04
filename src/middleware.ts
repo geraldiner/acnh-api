@@ -10,8 +10,8 @@ export default clerkMiddleware(async (auth, req) => {
   }
 
   if (
-    isAdminRoute(req) &&
-    (await auth()).sessionClaims?.metadata?.role !== "admin"
+    isAdminRoute(req)
+    && (await auth()).sessionClaims?.metadata?.role !== "admin"
   ) {
     return NextResponse.redirect(new URL("/", req.url));
   }
