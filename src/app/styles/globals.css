@@ -47,23 +47,35 @@
 }
 
 @layer components {
-  nav h3 {
+  header nav h3 {
     @apply m-0;
   }
 
-  nav h3 a {
+  header nav h3 a {
     @apply no-underline;
   }
 
-  nav a {
+  header nav a {
     @apply text-gray-950 underline underline-offset-2;
   }
 
-  nav a.active {
-    @apply text-amber-800 font-bold;
+  header nav a.active {
+    @apply text-amber-800 font-semibold;
   }
 
-  nav a:hover {
+  header nav a:hover {
     @apply text-blue-500 underline-offset-4;
+  }
+
+  footer a,
+  footer nav a,
+  footer nav button {
+    @apply text-gray-950 underline underline-offset-2;
+  }
+
+  footer a:hover,
+  footer nav a:hover,
+  footer nav button:hover {
+    @apply text-blue-500 underline underline-offset-4;
   }
 }

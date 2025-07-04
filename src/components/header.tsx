@@ -12,10 +12,6 @@ const NAV_LINKS = [
     title: "API Docs",
     href: "/docs",
   },
-  {
-    title: "Admin",
-    href: "/admin",
-  },
 ];
 
 function Header() {

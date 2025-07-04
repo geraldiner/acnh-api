@@ -1,12 +1,33 @@
+import { SignedIn, SignedOut, SignInButton, SignOutButton } from "@clerk/nextjs";
+import Link from "next/link";
+
+const ADMIN_LINKS = [
+  {
+    title: "Admin",
+    href: "/admin",
+  },
+];
+
 function Footer() {
   return (
     <footer className="w-full bg-fuchsia-100">
-      <div className="w-full md:max-w-5xl mx-auto flex justify-center items-center p-5">
+      <div className="w-full md:max-w-5xl mx-auto flex flex-col justify-center items-center p-5 text-center">
         <p>
           Made with 💖 by
           {" "}
-          <a href="https://github.com/geraldiner" rel="noopener noreferrer" target="_blank">Geraldine</a>
+          <a href="https://github.com/geraldiner" rel="noopener noreferrer" target="_blank">Geraldine Ragsac</a>
         </p>
+        <nav className="flex justify-center items-center gap-6">
+          <SignedIn>
+            <ul>
+              {ADMIN_LINKS.map((link) => {
+                return (<li key={link.title}><Link href={link.href}>{link.title}</Link></li>);
+              })}
+            </ul>
+            <SignOutButton />
+          </SignedIn>
+          <SignedOut><SignInButton mode="modal" oauthFlow="popup">Admin Sign In</SignInButton></SignedOut>
+        </nav>
       </div>
     </footer>
   );

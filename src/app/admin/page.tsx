@@ -1,7 +1,7 @@
 "use client";
 import Image from "next/image";
 
-import { Fragment, useState } from "react";
+import { useState } from "react";
 import { convertFileToBlobUrl } from "../utils/file_utils";
 
 function Admin() {

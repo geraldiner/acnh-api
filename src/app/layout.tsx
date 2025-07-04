@@ -1,3 +1,4 @@
+import { ClerkProvider } from "@clerk/nextjs";
 import Footer from "@/components/footer";
 import Header from "@/components/header";
 import "./styles/globals.css";
@@ -13,15 +14,17 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <body>
-        <Header />
-        <main className="w-full md:max-w-5xl mx-auto min-h-screen grow p-5">
+    <ClerkProvider>
+      <html lang="en">
+        <body>
+          <Header />
+          <main className="w-full md:max-w-5xl mx-auto min-h-screen grow p-5">
 
-          {children}
-        </main>
-        <Footer />
-      </body>
-    </html>
+            {children}
+          </main>
+          <Footer />
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
