@@ -6,25 +6,24 @@ export async function POST(request: Request) {
 
   try {
     const response = await axios.post(
-      "http://localhost:8888/api/upload-images",
-      formData,
+      "http://localhost:8888/api/v2/upload-images",
+      formData
     );
     if (response.status !== 200) {
       return NextResponse.json(
         { message: "Something went wrong." },
-        { status: 500, statusText: "Internal Server Error" },
+        { status: 500, statusText: "Internal Server Error" }
       );
     }
     return NextResponse.json(
       { message: response.data.message },
-      { status: 200, statusText: "OK" },
+      { status: 200, statusText: "OK" }
     );
-  }
-  catch (error) {
+  } catch (error) {
     console.error(error);
     return NextResponse.json(
       { message: "Something went wrong." },
-      { status: 500, statusText: "Internal Server Error" },
+      { status: 500, statusText: "Internal Server Error" }
     );
   }
 }

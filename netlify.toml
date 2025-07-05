@@ -1,13 +1,8 @@
-[build]
-  command = "npm run build"
-  functions = "netlify/functions"
-  publish = ".next"
-
 [dev]
   command = "next dev" # Command to start your dev server
   publish = ".next" # Folder with the static content for _redirect file
 
 [[redirects]]
-  from = "/api/*"
+  from = "/api/v2/*"
   to = "/.netlify/functions/:splat"
   status = 200

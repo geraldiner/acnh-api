@@ -27,6 +27,8 @@ export default antfu(
       "node/prefer-global/process": ["off"],
       "node/no-process-env": ["error"],
       "react/no-array-index-key": ["off"],
+      "style/brace-style": ["off"],
+      "style/comma-dangle": ["off"],
     },
   },
   ...compat.config({
