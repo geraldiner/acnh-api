@@ -10,7 +10,7 @@ export async function POST(request: Request) {
 
     if (response.status !== 200) {
       return Response.json(
-        { message: "Something went wrong." },
+        { message: response.data.message },
         { status: 500, statusText: "Internal Server Error" }
       );
     }
@@ -21,7 +21,7 @@ export async function POST(request: Request) {
   } catch (error) {
     console.error(error);
     return Response.json(
-      { message: "Something went wrong." },
+      { message: error },
       { status: 500, statusText: "Internal Server Error" }
     );
   }
