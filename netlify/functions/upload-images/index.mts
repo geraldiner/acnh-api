@@ -2,24 +2,22 @@ import type { Context } from "@netlify/functions";
 import { getStore } from "@netlify/blobs";
 
 export default async (req: Request, context: Context) => {
-  // Accessing the request as `multipart/form-data`.
-  const formData = await req.formData();
+  const formData = await req.json();
 
   // Access image store
   const imagesStore = getStore("images");
 
-  for (const [key] of formData) {
-    const file = formData.get(key) as File;
-    await imagesStore.set(file.name, file, {
-      metadata: {
-        type: file.type,
-      },
+  const formDataKeys = Object.keys(formData);
+  formDataKeys.forEach(async (key) => {
+    const fileData = JSON.parse(formData[key]);
+    await imagesStore.set(fileData.name, fileData.fileInBase64, {
+      metadata: { type: fileData.type },
     });
-  }
+  });
 
   return new Response(
     JSON.stringify({
-      message: `${Array.from(formData.values()).length} file(s) were uploaded.`,
+      message: `${formDataKeys.length} file(s) were uploaded.`,
     }),
     { status: 200, statusText: "OK" }
   );

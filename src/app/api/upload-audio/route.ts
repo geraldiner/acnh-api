@@ -1,29 +1,26 @@
 import axios from "axios";
-import { NextResponse } from "next/server";
 import { formatRequestUrl } from "@/app/utils/env_utils";
 
 export async function POST(request: Request) {
-  const formData = await request.formData();
-
+  // Get request data to pass
+  const data = await request.json();
   try {
     const splat = "/api/v2/upload-audio";
-    const response = await axios.post(
-      formatRequestUrl("netlify", splat),
-      formData
-    );
+    const response = await axios.post(formatRequestUrl("netlify", splat), data);
+
     if (response.status !== 200) {
-      return NextResponse.json(
+      return Response.json(
         { message: "Something went wrong." },
         { status: 500, statusText: "Internal Server Error" }
       );
     }
-    return NextResponse.json(
+    return Response.json(
       { message: response.data.message },
       { status: 200, statusText: "OK" }
     );
   } catch (error) {
     console.error(error);
-    return NextResponse.json(
+    return Response.json(
       { message: "Something went wrong." },
       { status: 500, statusText: "Internal Server Error" }
     );

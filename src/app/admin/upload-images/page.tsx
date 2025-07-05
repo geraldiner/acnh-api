@@ -4,7 +4,7 @@ import axios from "axios";
 import Image from "next/image";
 import { useRef, useState } from "react";
 import { formatRequestUrl } from "@/app/utils/env_utils";
-import { convertFileToBlobUrl } from "@/app/utils/file_utils";
+import { convertFileToBase64, convertFileToBlobUrl } from "@/app/utils/file_utils";
 
 function UploadImages() {
   const [uploadedFiles, setUploadedFiles] = useState<File[] | null>(null);
@@ -27,14 +27,18 @@ function UploadImages() {
   const submitUpload = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (uploadedFiles && uploadedFiles.length) {
-      const formData = new FormData();
+      const data: Record<string, unknown> = {};
       for (const file of uploadedFiles) {
-        formData.append(file.name, file);
+        const fileInBase64 = await convertFileToBase64(file) as string;
+        const fileData = JSON.stringify({ fileInBase64, name: file.name, type: file.type });
+        const fileKey = file.name;
+        data[fileKey] = fileData;
       }
       const splat = "/api/upload-images";
       const response = await axios.post(
         formatRequestUrl("next", splat),
-        formData,
+        data,
+        { headers: { "Content-Type": "application/json" } }
       );
       formRef.current?.reset();
       setServerMessage(response.data.message);
