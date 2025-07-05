@@ -2,6 +2,7 @@
 import axios from "axios";
 
 import { useRef, useState } from "react";
+import { formatRequestUrl } from "@/app/utils/env_utils";
 import { convertFileToBlobUrl } from "@/app/utils/file_utils";
 
 function UploadAudio() {
@@ -29,8 +30,9 @@ function UploadAudio() {
       for (const file of uploadedFiles) {
         formData.append(file.name, file);
       }
+      const splat = "/api/upload-audio";
       const response = await axios.post(
-        "http://localhost:3000/api/upload-audio",
+        formatRequestUrl("next", splat),
         formData,
       );
       formRef.current?.reset();

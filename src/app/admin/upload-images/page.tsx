@@ -3,6 +3,7 @@ import axios from "axios";
 
 import Image from "next/image";
 import { useRef, useState } from "react";
+import { formatRequestUrl } from "@/app/utils/env_utils";
 import { convertFileToBlobUrl } from "@/app/utils/file_utils";
 
 function UploadImages() {
@@ -30,8 +31,9 @@ function UploadImages() {
       for (const file of uploadedFiles) {
         formData.append(file.name, file);
       }
+      const splat = "/api/upload-images";
       const response = await axios.post(
-        "http://localhost:3000/api/upload-images",
+        formatRequestUrl("next", splat),
         formData,
       );
       formRef.current?.reset();

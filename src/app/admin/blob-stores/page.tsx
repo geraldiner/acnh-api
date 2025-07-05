@@ -1,5 +1,8 @@
+import { formatRequestUrl, } from "@/app/utils/env_utils";
+
 async function BlobStores() {
-  const response = await fetch("http://localhost:3000/api/blob-stores");
+  const splat = "/api/blob-stores";
+  const response = await fetch(formatRequestUrl("next", splat));
   const data = await response.json();
 
   return (

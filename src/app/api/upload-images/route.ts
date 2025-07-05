@@ -1,12 +1,14 @@
 import axios from "axios";
 import { NextResponse } from "next/server";
+import { formatRequestUrl } from "@/app/utils/env_utils";
 
 export async function POST(request: Request) {
   const formData = await request.formData();
 
   try {
+    const splat = "/api/v2/upload-images";
     const response = await axios.post(
-      "http://localhost:8888/api/v2/upload-images",
+      formatRequestUrl("netlify", splat),
       formData
     );
     if (response.status !== 200) {

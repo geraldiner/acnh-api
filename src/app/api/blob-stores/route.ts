@@ -1,8 +1,13 @@
+import axios from "axios";
 import { NextResponse } from "next/server";
+import { formatRequestUrl } from "@/app/utils/env_utils";
 
 export async function GET() {
-  const response = await fetch("http://localhost:8888/api/v2/blob-stores");
-  const json = await response.json();
+  const splat = "/api/v2/blob-stores";
+  const response = await axios.get(formatRequestUrl("netlify", splat));
 
-  return NextResponse.json(json, { status: 200, statusText: "OK" });
+  return NextResponse.json(JSON.stringify(response.data), {
+    status: 200,
+    statusText: "OK",
+  });
 }

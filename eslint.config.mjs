@@ -25,10 +25,10 @@ export default antfu(
       "no-console": ["warn"],
       "antfu/no-top-level-await": ["off"],
       "node/prefer-global/process": ["off"],
-      "node/no-process-env": ["error"],
       "react/no-array-index-key": ["off"],
       "style/brace-style": ["off"],
       "style/comma-dangle": ["off"],
+      "style/operator-linebreak": ["off"],
     },
   },
   ...compat.config({

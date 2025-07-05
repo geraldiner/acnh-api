@@ -7,7 +7,7 @@ const ADMIN_LINKS = [
   },
   {
     label: "Blob Stores",
-    href: "/blob-stores",
+    href: "blob-stores",
   },
   {
     label: "Debug",
