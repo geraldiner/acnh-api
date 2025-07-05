@@ -18,7 +18,7 @@ function Header() {
   const pathname = usePathname();
   return (
     <header className="w-full bg-amber-100">
-      <nav className="w-full md:max-w-5xl mx-auto flex justify-between items-center p-5">
+      <nav className="w-full md:max-w-5xl mx-auto flex justify-between items-center p-6">
         <h3><Link href="/">ACNH API 2.0</Link></h3>
         <ul className="flex items-center gap-8">
           {NAV_LINKS.map((link) => {

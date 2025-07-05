@@ -11,7 +11,7 @@ const ADMIN_LINKS = [
 function Footer() {
   return (
     <footer className="w-full bg-fuchsia-100">
-      <div className="w-full md:max-w-5xl mx-auto flex flex-col justify-center items-center p-5 text-center">
+      <div className="w-full md:max-w-5xl mx-auto flex flex-col justify-center items-center p-6 text-center">
         <p>
           Made with 💖 by
           {" "}

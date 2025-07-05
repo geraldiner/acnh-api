@@ -41,8 +41,24 @@
     @apply cursor-pointer;
   }
 
+  hr {
+    @apply my-4;
+  }
+
   input[type="text"] {
     @apply cursor-pointer border border-purple-400 bg-white rounded-sm p-2;
+  }
+
+  pre {
+    @apply w-full bg-yellow-100 border-1 border-yellow-500 rounded-md p-6;
+  }
+
+  pre {
+    white-space: pre-wrap; /* Since CSS 2.1 */
+    white-space: -moz-pre-wrap; /* Mozilla, since 1999 */
+    white-space: -pre-wrap; /* Opera 4-6 */
+    white-space: -o-pre-wrap; /* Opera 7 */
+    word-wrap: break-word; /* Internet Explorer 5.5+ */
   }
 }
 

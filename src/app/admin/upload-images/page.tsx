@@ -3,8 +3,8 @@ import axios from "axios";
 
 import Image from "next/image";
 import { useRef, useState } from "react";
-import { formatRequestUrl } from "@/app/utils/env_utils";
-import { convertFileToBase64, convertFileToBlobUrl } from "@/app/utils/file_utils";
+import { formatRequestUrl } from "@/utils/env_utils";
+import { convertFileToBase64, convertFileToBlobUrl } from "@/utils/file_utils";
 
 function UploadImages() {
   const [uploadedFiles, setUploadedFiles] = useState<File[] | null>(null);

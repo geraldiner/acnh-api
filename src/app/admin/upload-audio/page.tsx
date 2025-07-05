@@ -2,8 +2,8 @@
 import axios from "axios";
 
 import { useRef, useState } from "react";
-import { formatRequestUrl } from "@/app/utils/env_utils";
-import { convertFileToBase64, convertFileToBlobUrl } from "@/app/utils/file_utils";
+import { formatRequestUrl } from "@/utils/env_utils";
+import { convertFileToBase64, convertFileToBlobUrl } from "@/utils/file_utils";
 
 function UploadAudio() {
   const [uploadedFiles, setUploadedFiles] = useState<File[] | null>(null);

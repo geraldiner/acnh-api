@@ -3,8 +3,8 @@
 import axios from "axios";
 import Image from "next/image";
 import { useEffect, useRef, useState } from "react";
-import { formatRequestUrl } from "@/app/utils/env_utils";
-import { convertBase64ToBlobUrl } from "@/app/utils/file_utils";
+import { formatRequestUrl } from "@/utils/env_utils";
+import { convertBase64ToBlobUrl } from "@/utils/file_utils";
 
 type BlobWithMetadata = {
   data: string;
@@ -25,7 +25,7 @@ function BlobStores() {
     null
   );
   const [blobKey, setBlobKey] = useState<string>("");
-  const [blobCategory, setBlobCategory] = useState<string>("");
+  const [blobType, setBlobType] = useState<string>("");
   const [foundBlob, setFoundBlob] = useState<{
     findBlobByKey: BlobWithMetadata;
     getRandomImage: BlobWithMetadata;
@@ -50,7 +50,7 @@ function BlobStores() {
   }, []);
 
   const handleBlobTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setBlobCategory(e.target.value);
+    setBlobType(e.target.value);
     setFoundBlob((prev) => {
       return {
         ...prev,
@@ -87,8 +87,8 @@ function BlobStores() {
     e: React.FormEvent<HTMLFormElement>
   ) => {
     e.preventDefault();
-    if (blobKey && blobCategory) {
-      const splat = `/api/blobs/${blobCategory}/`;
+    if (blobKey && blobType) {
+      const splat = `/api/blobs/${blobType}/`;
       const url = `${formatRequestUrl("next", splat)}${blobKey}`;
       const response = await axios.get(url);
       const data = response.data;
@@ -101,7 +101,7 @@ function BlobStores() {
       setFoundBlob((prev) => {
         return {
           ...prev,
-          findBlobByKey: data.audioWithMetadata,
+          findBlobByKey: data.blobWithMetadata,
         };
       });
     }
@@ -125,6 +125,7 @@ function BlobStores() {
           <h2>JSON data</h2>
           <p>
             Message:
+            {" "}
             {json.message}
           </p>
           <p>Stores: </p>
@@ -151,21 +152,21 @@ function BlobStores() {
               <input
                 type="radio"
                 id="audio"
-                name="category"
+                name="type"
                 value="audio"
                 onChange={handleBlobTypeChange}
-                checked={blobCategory === "audio"}
+                checked={blobType === "audio"}
               />
               <label htmlFor="audio">Audio</label>
               <input
                 type="radio"
-                id="image"
-                name="category"
+                id="images"
+                name="type"
                 value="images"
                 onChange={handleBlobTypeChange}
-                checked={blobCategory === "images"}
+                checked={blobType === "images"}
               />
-              <label htmlFor="image">Image</label>
+              <label htmlFor="images">Image</label>
             </div>
           </fieldset>
           <div>
@@ -183,7 +184,7 @@ function BlobStores() {
               />
               <button
                 type="submit"
-                disabled={!blobCategory || !blobKey}
+                disabled={!blobType || !blobKey}
                 className="w-full md:w-max bg-purple-500 text-white px-4 py-2 rounded-sm disabled:bg-purple-300 disabled:cursor-not-allowed disabled:text-gray-50"
               >
                 GET
@@ -209,7 +210,7 @@ function BlobStores() {
                     <Image
                       className="rounded-sm"
                       width={256}
-                      height={128}
+                      height={256}
                       alt={`${blobKey}`}
                       src={convertBase64ToBlobUrl(foundBlob.findBlobByKey.data, foundBlob.findBlobByKey.metadata.type)}
                     />

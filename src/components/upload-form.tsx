@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useState } from "react";
 
-import { convertFileToBlobUrl } from "@/app/utils/file_utils";
+import { convertFileToBlobUrl } from "@/utils/file_utils";
 
 function UploadForm() {
   const [uploadedFiles, setUploadedFiles] = useState<File[] | null>(null);

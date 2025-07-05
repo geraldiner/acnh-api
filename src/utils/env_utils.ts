@@ -1,3 +1,5 @@
+import musicImageJson from "../app/api/music/music.json";
+
 function getNetlifyBaseApiUrl() {
   return process.env.NODE_ENV === "development"
     ? "http://localhost:8888"
@@ -16,4 +18,14 @@ function formatRequestUrl(service: "next" | "netlify", splat: string) {
   return `${baseUrl ?? ""}${splat}`;
 }
 
-export { formatRequestUrl, getNetlifyBaseApiUrl, getNextBaseApiUrl };
+function getRandomImageKey() {
+  const musicImageKeys = Object.keys(musicImageJson);
+  return musicImageKeys[Math.floor(Math.random() * musicImageKeys.length)];
+}
+
+export {
+  formatRequestUrl,
+  getNetlifyBaseApiUrl,
+  getNextBaseApiUrl,
+  getRandomImageKey,
+};

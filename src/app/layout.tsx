@@ -18,8 +18,7 @@ export default function RootLayout({
       <html lang="en">
         <body>
           <Header />
-          <main className="w-full md:max-w-5xl mx-auto min-h-screen grow p-5">
-
+          <main className="w-full md:max-w-5xl mx-auto min-h-screen grow p-6">
             {children}
           </main>
           <Footer />

@@ -3,22 +3,22 @@ import { getStore } from "@netlify/blobs";
 
 export default async (req: Request, context: Context) => {
   const searchParams = context.url.searchParams;
-  const { category, key } = Object.fromEntries(searchParams);
+  const { type, key } = Object.fromEntries(searchParams);
 
-  // Get audio store first
-  const audioStore = getStore(category);
+  // Get store first
+  const store = getStore(type);
 
-  // Get audio file from store
-  const audioWithMetadata = await audioStore.getWithMetadata(key);
+  // Get file from store
+  const blobWithMetadata = await store.getWithMetadata(key);
 
-  if (!audioWithMetadata) {
-    return new Response(JSON.stringify({ message: `Audio ${key} not found` }), {
+  if (!blobWithMetadata) {
+    return new Response(JSON.stringify({ message: `Blob ${key} not found` }), {
       status: 404,
       statusText: "Not found",
     });
   }
 
   return new Response(
-    JSON.stringify({ message: `Audio ${key} found`, audioWithMetadata })
+    JSON.stringify({ message: `Blob ${key} found`, blobWithMetadata })
   );
 };

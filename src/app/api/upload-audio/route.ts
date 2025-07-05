@@ -1,5 +1,5 @@
 import axios from "axios";
-import { formatRequestUrl } from "@/app/utils/env_utils";
+import { formatRequestUrl } from "@/utils/env_utils";
 
 export async function POST(request: Request) {
   // Get request data to pass
