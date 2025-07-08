@@ -1,13 +1,11 @@
 "use client";
 
 import axios from "axios";
-import Image from "next/image";
 import { useState } from "react";
 import { formatRequestUrl, getRandomImageKey } from "@/utils/env_utils";
-import { convertBase64ToBlobUrl } from "@/utils/file_utils";
 
 function Home() {
-  const [randomFileData, setRandomFileData] = useState<Record<string, any>>({});
+  const [randomSrc, setRandomSrc] = useState("");
   const [currentTimeData, setCurrentTimeData] = useState<Record<string, any>>({});
   const [isLoading, setIsLoading] = useState(false);
 
@@ -15,18 +13,14 @@ function Home() {
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    setRandomFileData({});
     setIsLoading(true);
     try {
-      const splat = "/api/blobs/images/";
       const randomImageKey = getRandomImageKey();
-      const url = `${formatRequestUrl("next", splat)}${randomImageKey}.png`;
-      const response = await axios.get(url);
-      const data = response.data;
-      setRandomFileData(data);
+      const splat = `/api/v2/blobs-new/images/${randomImageKey}.png`;
+      const url = `${formatRequestUrl("netlify", splat)}`;
+      setRandomSrc(url);
     } catch (error) {
       console.error(error);
-      setRandomFileData({});
     } finally {
       setIsLoading(false);
     }
@@ -36,18 +30,14 @@ function Home() {
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
     e.preventDefault();
-    setRandomFileData({});
     setIsLoading(true);
     try {
-      const splat = "/api/blobs/audio/";
       const randomImageKey = getRandomImageKey();
-      const url = `${formatRequestUrl("next", splat)}${randomImageKey}.mp3`;
-      const response = await axios.get(url);
-      const data = response.data;
-      setRandomFileData(data);
+      const splat = `/api/v2/blobs-new/audio/${randomImageKey}.mp3`;
+      const url = `${formatRequestUrl("netlify", splat)}`;
+      setRandomSrc(url);
     } catch (error) {
       console.error(error);
-      setRandomFileData({});
     } finally {
       setIsLoading(false);
     }
@@ -68,11 +58,6 @@ function Home() {
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const { data, metadata } = randomFileData?.blobWithMetadata || {
-    data: "",
-    metadata: {},
   };
 
   return (
@@ -111,33 +96,26 @@ function Home() {
               Get a random audio
             </button>
           </div>
-          {data && (
+          {randomSrc && (
             <>
-              <p>{randomFileData.message}</p>
-              {metadata.type.startsWith("image") && (
-                <Image
-                  className="rounded-sm"
-                  width={256}
-                  height={256}
-                  alt="Random image"
-                  src={convertBase64ToBlobUrl(data, metadata.type)}
-                />
-              )}
-              {metadata.type.startsWith("audio") && (
-                <audio controls className="h-max">
-                  <source
-                    src={convertBase64ToBlobUrl(
-                      data,
-                      metadata.type
-                    )}
-                    type={metadata.type}
-                  />
+              {randomSrc.endsWith(".png")
+                && (
+                  <>
+                    <img
+                      className="size-60 rounded-sm"
+                      alt={`${randomSrc}`}
+                      src={randomSrc}
+                    />
+                  </>
+                )}
+
+              {randomSrc.endsWith(".mp3") && (
+                <audio
+                  src={randomSrc}
+                  controls
+                >
                 </audio>
               )}
-              <details>
-                <summary>See response</summary>
-                <pre>{JSON.stringify(randomFileData, null, 2)}</pre>
-              </details>
             </>
           )}
         </section>
