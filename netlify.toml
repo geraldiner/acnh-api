@@ -2,7 +2,8 @@
   command = "next dev" # Command to start your dev server
   publish = ".next" # Folder with the static content for _redirect file
 
+
 [[redirects]]
-  from = "/api/v2/*"
+  from = "/api-v2/*"
   to = "/.netlify/functions/:splat"
   status = 200

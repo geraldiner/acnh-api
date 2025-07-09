@@ -1,4 +1,4 @@
-import musicImageJson from "../app/api/music/music.json";
+import musicImageJson from "../../netlify/functions/music/music.json";
 
 function getNetlifyBaseApiUrl() {
   return process.env.NODE_ENV === "development"
