@@ -1,56 +1,48 @@
 "use client";
 
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import AudioPlayer from "@/components/audio-player";
+import Button from "@/components/button";
+import ImageTile from "@/components/image-tile";
 import { formatRequestUrl, getRandomImageKey } from "@/utils/env_utils";
 
 function Home() {
+  const [randomFileName, setRandomFileName] = useState("");
   const [randomSrc, setRandomSrc] = useState("");
-  const [currentTimeData, setCurrentTimeData] = useState<Record<string, any>>({});
+  const [currentTimeData, setCurrentTimeData] = useState<Record<string, any>>(
+    {}
+  );
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleGetRandomImage = async (
-    e: React.MouseEvent<HTMLButtonElement>
-  ) => {
+  const handleGetRandomAsset = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
-    setIsLoading(true);
-    try {
-      const randomImageKey = getRandomImageKey();
-      const splat = `/api/v2/blobs-new/images/${randomImageKey}.png`;
+    setRandomSrc("");
+    const type = e.currentTarget.textContent?.includes("image")
+      ? "images"
+      : e.currentTarget.textContent?.includes("audio")
+        ? "audio"
+        : null;
+    if (type) {
+      const ext = type === "images" ? ".png" : ".mp3";
+      const randomImageKey = `${getRandomImageKey()}${ext}`;
+      const splat = `/api-v2/blobs/${type}/${randomImageKey}`;
       const url = `${formatRequestUrl("netlify", splat)}`;
       setRandomSrc(url);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
+      setRandomFileName(randomImageKey);
     }
   };
 
-  const handleGetRandomAudio = async (
+  const handleGetCurrentTimeData = async (
     e: React.MouseEvent<HTMLButtonElement>
   ) => {
-    e.preventDefault();
-    setIsLoading(true);
-    try {
-      const randomImageKey = getRandomImageKey();
-      const splat = `/api/v2/blobs-new/audio/${randomImageKey}.mp3`;
-      const url = `${formatRequestUrl("netlify", splat)}`;
-      setRandomSrc(url);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleGetCurrentTimeData = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
     setIsLoading(true);
     try {
       const now = new Date();
       const hour = now.getHours();
-      const splat = `/api/hourly-bgm/${hour}/sunny`;
-      const response = await axios.get(formatRequestUrl("next", splat));
+      const splat = `/api-v2/hourly-bgm/${hour}/sunny`;
+      const response = await axios.get(formatRequestUrl("netlify", splat));
       setCurrentTimeData(response.data);
     } catch (error) {
       console.error(error);
@@ -62,7 +54,7 @@ function Home() {
 
   return (
     <>
-      <h1>ACNH API 2.0</h1>
+      <h1>Welcome to ACNH API 2.0</h1>
       <p>
         This is a reboot of the ACNH API, initially created by Alexis Lours (
         <a
@@ -78,43 +70,69 @@ function Home() {
       <section className="grid grid-cols-1 gap-6">
         <section className="bg-yellow-50 border border-yellow-500  rounded-md p-6 grid grid-cols-1 gap-4">
           <h3>Get a random image or audio file</h3>
+          <p>
+            Image and audio files are stored in Netlify Blobs. You can access
+            them at
+            {" "}
+            <code>https://acnh-api.netlify.app/api-v2/:type/:key</code>
+            ,
+            where
+            {" "}
+            <code>:type</code>
+            {" "}
+            is either
+            {" "}
+            <code>audio</code>
+            {" "}
+            or
+            {" "}
+            <code>images</code>
+            , and
+            <code>:key</code>
+            {" "}
+            is the file name.
+          </p>
+          <p>
+            You should be able to set that URL as the
+            {" "}
+            <code>src</code>
+            {" "}
+            on
+            {" "}
+            <code>img</code>
+            {" "}
+            and
+            <code>audio</code>
+            {" "}
+            elements.
+          </p>
           <div className="flex flex-col md:flex-row justify-start items-center md:items-start gap-4">
-            <button
+            <Button
               type="button"
               disabled={isLoading}
-              onClick={handleGetRandomImage}
-              className="w-full md:w-max bg-purple-500 text-white px-4 py-2 rounded-sm disabled:bg-purple-300 disabled:cursor-not-allowed disabled:text-gray-50"
+              onClick={handleGetRandomAsset}
             >
               Get a random image
-            </button>
-            <button
+            </Button>
+            <Button
               type="button"
               disabled={isLoading}
-              onClick={handleGetRandomAudio}
-              className="w-full md:w-max bg-purple-500 text-white px-4 py-2 rounded-sm disabled:bg-purple-300 disabled:cursor-not-allowed disabled:text-gray-50"
+              onClick={handleGetRandomAsset}
             >
               Get a random audio
-            </button>
+            </Button>
           </div>
+          <p>{randomFileName}</p>
           {randomSrc && (
             <>
-              {randomSrc.endsWith(".png")
-                && (
-                  <>
-                    <img
-                      className="size-60 rounded-sm"
-                      alt={`${randomSrc}`}
-                      src={randomSrc}
-                    />
-                  </>
-                )}
-
-              {randomSrc.endsWith(".mp3") && (
-                <audio
+              {randomSrc.endsWith(".png") && (
+                <ImageTile
+                  alt={randomFileName}
                   src={randomSrc}
-                  controls
-                >
-                </audio>
+                />
+              )}
+              {randomSrc.endsWith(".mp3") && (
+                <AudioPlayer src={randomSrc} />
               )}
             </>
           )}
@@ -122,18 +140,22 @@ function Home() {
         <section className="bg-yellow-50 border border-yellow-500 rounded-md p-6 grid grid-cols-1 gap-4">
           <h3>Get data for a random object</h3>
           <div className="flex flex-col md:flex-row justify-start items-center md:items-start gap-4">
-            <button
+            <Button
               type="button"
               disabled={isLoading}
               onClick={handleGetCurrentTimeData}
-              className="w-full md:w-max bg-purple-500 text-white px-4 py-2 rounded-sm disabled:bg-purple-300 disabled:cursor-not-allowed disabled:text-gray-50"
             >
               Get hourly BGM data for your current time
-            </button>
+            </Button>
           </div>
           {currentTimeData.message && (
             <>
               <p>{currentTimeData.message}</p>
+              <AudioPlayer src={formatRequestUrl(
+                "netlify",
+                `/api-v2/blobs/audio/${currentTimeData.hourData["file-name"]}.mp3`
+              )}
+              />
               <details>
                 <summary>See response</summary>
                 <pre>{JSON.stringify(currentTimeData.hourData, null, 2)}</pre>

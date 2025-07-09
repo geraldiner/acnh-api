@@ -1,24 +1,27 @@
-import type { Config, Context } from "@netlify/functions";
+import type { Context } from "@netlify/functions";
 import { getStore } from "@netlify/blobs";
+import { parseParamsFromContext } from "../../../src/utils/format_utils";
 
 export default async (req: Request, context: Context) => {
-  const searchParams = context.url.searchParams;
-  const { type, key } = Object.fromEntries(searchParams);
+  const params = parseParamsFromContext(context.url.pathname, "/api-v2/blobs/");
+
+  const [type, key] = params;
 
   // Get store first
   const store = getStore(type);
 
   // Get file from store
-  const blobWithMetadata = await store.getWithMetadata(key);
+  const blob = await store.get(key, { type: "stream" });
 
-  if (!blobWithMetadata) {
-    return new Response(JSON.stringify({ message: `Blob ${key} not found` }), {
-      status: 404,
-      statusText: "Not found",
-    });
+  if (!blob) {
+    return Response.json(
+      { message: `Blob ${key} not found` },
+      {
+        status: 404,
+        statusText: "Not found",
+      }
+    );
   }
 
-  return new Response(
-    JSON.stringify({ message: `Blob ${key} found`, blobWithMetadata })
-  );
+  return new Response(blob, { status: 200, statusText: "OK" });
 };

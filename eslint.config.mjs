@@ -18,6 +18,9 @@ export default antfu(
       quotes: "double",
     },
   },
+  ...compat.config({
+    extends: ["plugin:@next/next/recommended"],
+  }),
   {
     rules: {
       "ts/no-redeclare": "off",
@@ -29,9 +32,7 @@ export default antfu(
       "style/brace-style": ["off"],
       "style/comma-dangle": ["off"],
       "style/operator-linebreak": ["off"],
+      "@next/next/no-img-element": ["off"],
     },
-  },
-  ...compat.config({
-    extends: ["plugin:@next/next/recommended"],
-  })
+  }
 );

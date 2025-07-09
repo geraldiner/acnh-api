@@ -1,14 +1,19 @@
-"use client";
+import axios from "axios";
+import { useRef, useState } from "react";
+import { formatRequestUrl } from "@/utils/env_utils";
+import Button from "./button";
+import UploadPreviews from "./upload-previews";
 
-import Image from "next/image";
-import { useState } from "react";
+type UploadFormProps = {
+  blobType: string;
+};
 
-import { convertFileToBlobUrl } from "@/utils/file_utils";
+function UploadForm({ blobType }: UploadFormProps) {
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [serverMessage, setServerMessage] = useState<string>("");
+  const formRef = useRef<HTMLFormElement>(null);
 
-function UploadForm() {
-  const [uploadedFiles, setUploadedFiles] = useState<File[] | null>(null);
-
-  const uploadFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleUploadFiles = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files) {
       const targetFiles = e.target.files;
       setUploadedFiles(() => {
@@ -21,75 +26,60 @@ function UploadForm() {
     }
   };
 
-  const submitUpload = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmitUpload = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (uploadedFiles && uploadedFiles.length) {
-      /**
-       * Upload
-       */
+      try {
+        const formData = new FormData();
+        for (const file of uploadedFiles) {
+          formData.append(file.name, file);
+        }
+        const splat = `/api-v2/upload-${blobType}`;
+        const response = await axios.post(
+          formatRequestUrl("netlify", splat),
+          formData,
+        );
+        setServerMessage(response.data.message);
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setUploadedFiles([]);
+        formRef.current?.reset();
+      }
     }
   };
+
+  const typeText = blobType === "images" ? "image" : "audio";
+
   return (
-    <section>
-      <h2>API Assets File Upload</h2>
-      <form className="border-1 border-purple-500 bg-purple-50 p-6 rounded-md" onSubmit={submitUpload}>
-        <label className="block mb-4 font-bold" htmlFor="multiple_files">
-          Upload multiple files
+    <form
+      className="grid grid-cols-1 gap-6 border-1 border-purple-500 bg-purple-50 p-6 rounded-md"
+      onSubmit={handleSubmitUpload}
+      encType="multipart/form-data"
+      ref={formRef}
+    >
+      <div>
+        <label className="block font-bold mb-2" htmlFor="multiple_files">
+          Upload multiple
+          {" "}
+          {typeText}
+          {" "}
+          files
         </label>
         <input
-          onChange={e => uploadFiles(e)}
+          onChange={handleUploadFiles}
           className="block w-full md:w-1/2 text-sm border border-gray-300 bg-white rounded-sm cursor-pointer file:bg-purple-500 file:text-white file:px-4 file:py-2"
           type="file"
-          accept="image/*, audio/*"
+          accept={blobType === "images" ? "image/*" : "audio/*"}
           multiple
         />
-        <div>
-          <h3>Previews</h3>
-          {uploadedFiles && uploadedFiles.length
-            ? (
-                <ul className="w-full flex flex-wrap gap-4 my-4">
-                  {uploadedFiles?.map((file) => {
-                    return (
-                      <li className="inline-block" key={file.name}>
-                        {file.type.startsWith("audio")
-                          ? (
-                              <>
-                                <p>{file.name}</p>
-                                <audio controls>
-                                  <source src={convertFileToBlobUrl(file)} type="audio/mpeg" />
-                                </audio>
-                              </>
-                            )
-                          : (
-                              <>
-                                <Image
-                                  className="rounded-sm"
-                                  width={96}
-                                  height={96}
-                                  alt={`${file.name}`}
-                                  src={convertFileToBlobUrl(file)}
-                                />
-                              </>
-                            )}
-                      </li>
-                    );
-                  })}
-                </ul>
-              )
-            : (
-                <p>Upload files to see previews here.</p>
-              )}
-        </div>
-        <button
-          type="submit"
-          className="bg-purple-500 text-white px-4 py-2 rounded-sm disabled:bg-purple-300 disabled:cursor-not-allowed disabled:text-gray-50"
-          disabled={!uploadedFiles || !uploadedFiles.length}
-        >
-          Upload!
-        </button>
-      </form>
-    </section>
-  );
-}
+      </div>
+      <UploadPreviews files={uploadedFiles} type={typeText} />
+      <div className="w-full md:w-max">
+        <Button disabled={!uploadedFiles || !uploadedFiles.length} type="submit">Upload!</Button>
+      </div>
+      {serverMessage && <p>{serverMessage}</p>}
+    </form>
+  ); }
 
 export default UploadForm;

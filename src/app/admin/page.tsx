@@ -2,14 +2,6 @@ import Link from "next/link";
 
 const ADMIN_LINKS = [
   {
-    label: "Home",
-    href: "",
-  },
-  {
-    label: "Blob Stores",
-    href: "blob-stores",
-  },
-  {
     label: "Debug",
     href: "debug",
   },
