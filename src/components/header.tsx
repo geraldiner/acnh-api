@@ -8,10 +8,6 @@ const NAV_LINKS = [
     label: "Home",
     href: "/",
   },
-  {
-    label: "API Docs",
-    href: "/docs",
-  },
 ];
 
 function Header() {
