@@ -74,9 +74,8 @@ function Home() {
             Image and audio files are stored in Netlify Blobs. You can access
             them at
             {" "}
-            <code>https://acnh-api.netlify.app/api-v2/:type/:key</code>
-            ,
-            where
+            <code>https://acnh-api.netlify.app/api-v2/blobs/:type/:key</code>
+            , where
             {" "}
             <code>:type</code>
             {" "}
